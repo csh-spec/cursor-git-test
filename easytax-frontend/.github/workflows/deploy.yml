@@ -3,11 +3,18 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     
     steps:
@@ -22,18 +29,36 @@ jobs:
         cache-dependency-path: easytax-frontend/package-lock.json
         
     - name: Install dependencies
-      run: |
-        cd easytax-frontend
-        npm ci
+      working-directory: ./easytax-frontend
+      run: npm ci
         
-    - name: Build
+    - name: Build with UTF-8 encoding
+      working-directory: ./easytax-frontend
       run: |
-        cd easytax-frontend
+        export LC_ALL=C.UTF-8
+        export LANG=C.UTF-8
         npm run build
         
-    - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main'
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Verify build output
+      run: |
+        ls -la ./easytax-frontend/out/
+        head -20 ./easytax-frontend/out/index.html
+        
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./easytax-frontend/out
+        path: './easytax-frontend/out'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
