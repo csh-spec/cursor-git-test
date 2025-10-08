@@ -39,10 +39,17 @@ jobs:
         export LANG=C.UTF-8
         npm run build
         
+    - name: Add .nojekyll file
+      run: |
+        touch ./easytax-frontend/out/.nojekyll
+        echo "Created .nojekyll file to disable Jekyll processing"
+        
     - name: Verify build output
       run: |
         ls -la ./easytax-frontend/out/
         head -20 ./easytax-frontend/out/index.html
+        echo "Checking for .nojekyll file:"
+        ls -la ./easytax-frontend/out/.nojekyll
         
     - name: Setup Pages
       uses: actions/configure-pages@v4
