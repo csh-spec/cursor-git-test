@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { formatCurrency } from '@/lib/utils';
@@ -39,6 +40,7 @@ const mockReportData = {
 };
 
 export default function ReportPage() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -55,9 +57,9 @@ export default function ReportPage() {
     setTimeout(() => {
       setIsSubmitting(false);
       setShowConfirmModal(false);
-      // TODO: 신고 완료 페이지로 이동
-      alert('신고가 성공적으로 제출되었습니다!');
-    }, 3000);
+      // 신고 진행 페이지로 이동
+      router.push('/dashboard/report/progress');
+    }, 1000);
   };
 
   const handleCancel = () => {

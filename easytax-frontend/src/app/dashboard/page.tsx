@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { SalesCard } from '@/components/dashboard/SalesCard';
@@ -74,14 +75,14 @@ const mockData = {
 };
 
 export default function DashboardPage() {
+  const router = useRouter();
+
   const handleViewDetails = (type: string) => {
-    console.log(`${type} 상세보기 클릭`);
-    // TODO: 상세 페이지로 이동
+    router.push(`/dashboard/details/${type}`);
   };
 
   const handleReport = () => {
-    console.log('신고하기 클릭');
-    // TODO: 신고 확인 페이지로 이동
+    router.push('/dashboard/report');
   };
 
   const handleViewAllTransactions = () => {
