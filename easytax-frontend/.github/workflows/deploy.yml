@@ -29,14 +29,12 @@ jobs:
         cache-dependency-path: easytax-frontend/package-lock.json
         
     - name: Install dependencies
-      run: |
-        cd easytax-frontend
-        npm ci
+      working-directory: ./easytax-frontend
+      run: npm ci
         
     - name: Build
-      run: |
-        cd easytax-frontend
-        npm run build
+      working-directory: ./easytax-frontend
+      run: npm run build
         
     - name: Setup Pages
       uses: actions/configure-pages@v4
