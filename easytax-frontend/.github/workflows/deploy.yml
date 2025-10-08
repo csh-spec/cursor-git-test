@@ -32,9 +32,17 @@ jobs:
       working-directory: ./easytax-frontend
       run: npm ci
         
-    - name: Build
+    - name: Build with UTF-8 encoding
       working-directory: ./easytax-frontend
-      run: npm run build
+      run: |
+        export LC_ALL=C.UTF-8
+        export LANG=C.UTF-8
+        npm run build
+        
+    - name: Verify build output
+      run: |
+        ls -la ./easytax-frontend/out/
+        head -20 ./easytax-frontend/out/index.html
         
     - name: Setup Pages
       uses: actions/configure-pages@v4
